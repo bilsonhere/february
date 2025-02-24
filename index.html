@@ -57,6 +57,10 @@
             50% { background-position: 100% 50%; }
             100% { background-position: 0% 50%; }
         }
+@keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
 
         img {
             max-width: 100%;
@@ -81,7 +85,7 @@
             text-align: center;
             position: relative;
             overflow: hidden;
-            animation: fadeIn 1.5s ease, bounceIn 2s ease;
+           animation: fadeIn 1.5s ease, bounceIn 2s ease, float 3s ease-in-out infinite;
             opacity:0.6;
         }
 
