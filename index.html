@@ -342,8 +342,8 @@
 
     <div class="container hidden" id="newInterface">
         <h1>also hows the weather there?</h1>
-        <input type="text" id="answer" placeholder="one word answer">
-        <button onclick="checkAnswer()">Submit</button>
+        <input type="text" id="weatherInput" placeholder="Enter weather description">
+<button onclick="sendWeatherInput()">Submit</button>
     </div>
 
     <div class="container hidden" id="finalPage">
@@ -414,24 +414,27 @@
                 newInterface.classList.remove('hidden');
             }
         }
-        function sendWeatherInput(userAnswer) {
- fetch('https://february12-b36l1fq8y-bilsiiis-projects.vercel.app/api/submitWeather', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json'
-  },
-  body: JSON.stringify({ weather: userInput })
-})
+       function sendWeatherInput() {
+  const userInput = document.getElementById("yourInputId").value;
 
+  fetch("https://february12-b36l1fq8y-bilsiiis-projects.vercel.app/api/submitWeather", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ userInput })
+  })
   .then(response => response.json())
   .then(data => {
-    console.log('Success:', data);
-    // You can do something here on success, e.g. show a message or navigate
+    console.log("Success:", data);
+    // You can show a success message here
   })
-  .catch((error) => {
-    console.error('Error:', error);
+  .catch(error => {
+    console.error("Error:", error);
+    // You can show an error message here
   });
 }
+
 
 // Example: call this when user submits the weather answer
 function checkAnswer() {
