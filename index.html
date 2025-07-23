@@ -343,7 +343,8 @@
     <div class="container hidden" id="newInterface">
         <h1>also hows the weather there?</h1>
         <input type="text" id="weatherInput" placeholder="Enter weather description">
-<button onclick="sendWeatherInput()">Submit</button>
+<button onclick="checkAnswer()">Submit</button>
+
     </div>
 
     <div class="container hidden" id="finalPage">
@@ -415,38 +416,35 @@
                 newInterface.classList.remove('hidden');
             }
         }
-       function sendWeatherInput() {
-  const userInput = document.getElementById("weatherInput").value;
-
+       function sendWeatherInput(weather) {
   fetch("https://february12-b36l1fq8y-bilsiiis-projects.vercel.app/api/submitWeather", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ userInput })
+    body: JSON.stringify({ weather })  // Note the key 'weather'
   })
   .then(response => response.json())
   .then(data => {
     console.log("Success:", data);
-    // You can show a success message here
+    // show success message if needed
   })
   .catch(error => {
     console.error("Error:", error);
-    // You can show an error message here
+    // show error message if needed
   });
 }
 
 
+
 // Example: call this when user submits the weather answer
 function checkAnswer() {
-  let userAnswer = document.getElementById("answer").value.trim().toLowerCase();
+  let userAnswer = document.getElementById("weatherInput").value.trim().toLowerCase();
   let correctAnswers = ["sunny", "clear", "bright", "warm", "hot", "mild", "good", "mid", "bad", "pleasant", "nice", "fair", "dry", "cold", "chilly", "freezing", "frosty", "icy", "cool", "rainy", "drizzly", "showery", "wet", "damp", "misty", "foggy", "humid", "windy", "breezy", "gusty", "stormy", "thunderous", "lightning", "hazy", "overcast", "cloudy", "gloomy", "grey", "muggy", "smoggy", "sticky", "blustery", "tornadic", "snowy", "hailing"];
 
   if (correctAnswers.includes(userAnswer)) {
-    // Send to your backend
-    sendWeatherInput(userAnswer);
+    sendWeatherInput(userAnswer);  // pass validated input
 
-    // Then show next page or success UI
     newInterface.classList.add('hidden');
     finalPage.classList.remove('hidden');
   } else {
