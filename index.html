@@ -414,31 +414,41 @@
                 newInterface.classList.remove('hidden');
             }
         }
-        function sendWeatherToSheet(weather) {
-  fetch(`https://script.google.com/macros/s/AKfycbzD0nl5njBsj2Fa6tTKYBeWXe2MWKRouIoSdb1ciDRy_GAZmw4RCqRdkhIIVXIjUHLTjw/exec?weather=${encodeURIComponent(weather)}`, {
-    method: "GET"
+        function sendWeatherInput(userAnswer) {
+  fetch('https://february12.vercel.app/api/submitWeather', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ weather: userAnswer })
   })
-  .then(response => response.text())
-  .then(data => console.log("Success:", data))
-  .catch(error => console.error("Error:", error));
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+    // You can do something here on success, e.g. show a message or navigate
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
 }
 
+// Example: call this when user submits the weather answer
+function checkAnswer() {
+  let userAnswer = document.getElementById("answer").value.trim().toLowerCase();
+  let correctAnswers = ["sunny", "clear", "bright", "warm", "hot", "mild", "good", "mid", "bad", "pleasant", "nice", "fair", "dry", "cold", "chilly", "freezing", "frosty", "icy", "cool", "rainy", "drizzly", "showery", "wet", "damp", "misty", "foggy", "humid", "windy", "breezy", "gusty", "stormy", "thunderous", "lightning", "hazy", "overcast", "cloudy", "gloomy", "grey", "muggy", "smoggy", "sticky", "blustery", "tornadic", "snowy", "hailing"];
 
+  if (correctAnswers.includes(userAnswer)) {
+    // Send to your backend
+    sendWeatherInput(userAnswer);
 
-        function checkAnswer() {
-            let userAnswer = document.getElementById("answer").value.trim().toLowerCase();
-            let correctAnswers = ["sunny", "clear", "bright", "warm", "hot", "mild", "good", "mid", "bad", "pleasant", "nice", "fair", "dry", "cold", "chilly", "freezing", "frosty", "icy", "cool", "rainy", "drizzly", "showery", "wet", "damp", "misty", "foggy", "humid", "windy", "breezy", "gusty", "stormy", "thunderous", "lightning", "hazy", "overcast", "cloudy", "gloomy", "grey", "muggy", "smoggy", "sticky", "blustery", "tornadic", "snowy", "hailing"]
-            ;
+    // Then show next page or success UI
+    newInterface.classList.add('hidden');
+    finalPage.classList.remove('hidden');
+  } else {
+    alert("Incorrect answer. Try again! with words like sunny, rainy, cold, hot...");
+  }
+}
 
-            if (correctAnswers.includes(userAnswer)) {
-                sendWeatherToSheet(userAnswer);
-
-                newInterface.classList.add('hidden');
-                finalPage.classList.remove('hidden');
-            } else {
-                alert("Incorrect answer. Try again! with words like sunny, rainy, cold, hot...");
-            }
-        }
         
 
         const countdownDate = new Date("April 8, 2025 00:00:00").getTime();
