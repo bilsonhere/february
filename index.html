@@ -328,8 +328,7 @@
         Your browser does not support the audio element.
     </audio>
 
-    <!-- idkn -->
-    <div id="muteButton" onclick="toggleMute()">🎵</div>
+ 
 
     <div class="container" id="landingPage">
         <h1>Shake hands with Luna and Amarah to proceed <3</h1>
@@ -343,7 +342,7 @@
     <div class="container hidden" id="newInterface">
         <h1>also hows the weather there?</h1>
         <input type="text" id="weatherInput" placeholder="Enter weather description">
-<button onclick="checkAnswer()">Submit</button>
+<button onclick="submitWeather()">Submit</button>
 
     </div>
 
@@ -371,111 +370,158 @@
     </div>
 
     <script>
-        
-        const backgroundSong = document.getElementById('backgroundSong');
+       document.addEventListener("DOMContentLoaded", function () {
+      const backgroundSong = document.getElementById("backgroundSong");
+      const muteButton = document.getElementById("muteButton");
 
-        // songplayer
-        window.onload = () => {
-            backgroundSong.play();
-        };
+      // Play song on window load
+      window.onload = () => {
+        backgroundSong.play();
+      };
 
-        // Mute/Unmute Functionality
-        function toggleMute() {
-            const muteButton = document.getElementById('muteButton');
-            if (backgroundSong.muted) {
-                backgroundSong.muted = false;
-                muteButton.textContent = "🎵";
-            } else {
-                backgroundSong.muted = true;
-                muteButton.textContent = "🔇";
-            }
+    ]
+
+      // Eye buttons and page transitions
+      const eyeButton1 = document.getElementById("eyeButton1");
+      const eyeButton2 = document.getElementById("eyeButton2");
+      const landingPage = document.getElementById("landingPage");
+      const newInterface = document.getElementById("newInterface");
+      const finalPage = document.getElementById("finalPage");
+
+      let eye1Clicked = false;
+      let eye2Clicked = false;
+
+      eyeButton1.addEventListener("click", () => {
+        eye1Clicked = true;
+        checkEyesClicked();
+      });
+
+      eyeButton2.addEventListener("click", () => {
+        eye2Clicked = true;
+        checkEyesClicked();
+      });
+
+      function checkEyesClicked() {
+        if (eye1Clicked && eye2Clicked) {
+          landingPage.classList.add("hidden");
+          newInterface.classList.remove("hidden");
         }
-document.addEventListener("DOMContentLoaded", function ()  {
-        const eyeButton1 = document.getElementById('eyeButton1');
-        const eyeButton2 = document.getElementById('eyeButton2');
-        const landingPage = document.getElementById('landingPage');
-        const newInterface = document.getElementById('newInterface');
-        const finalPage = document.getElementById('finalPage');
+      }
 
-        let eye1Clicked = false;
-        let eye2Clicked = false;
+      // Submit weather button
+      const submitWeather = document.getElementById("submitWeather");
+      submitWeather.addEventListener("click", checkAnswer);
 
-        eyeButton1.addEventListener('click', () => {
-            eye1Clicked = true;
-            checkEyesClicked();
-        });
+      function sendWeatherInput(weather) {
+        fetch(
+          "https://february12-b36l1fq8y-bilsiiis-projects.vercel.app/api/submitWeather",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ weather }),
+          }
+        )
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
 
-        eyeButton2.addEventListener('click', () => {
-            eye2Clicked = true;
-            checkEyesClicked();
-        });
+      function checkAnswer() {
+        const userAnswer = document
+          .getElementById("weatherInput")
+          .value.trim()
+          .toLowerCase();
 
-        function checkEyesClicked() {
-            if (eye1Clicked && eye2Clicked) {
-                landingPage.classList.add('hidden');
-                newInterface.classList.remove('hidden');
-            }
+        const correctAnswers = [
+          "sunny",
+          "clear",
+          "bright",
+          "warm",
+          "hot",
+          "mild",
+          "good",
+          "mid",
+          "bad",
+          "pleasant",
+          "nice",
+          "fair",
+          "dry",
+          "cold",
+          "chilly",
+          "freezing",
+          "frosty",
+          "icy",
+          "cool",
+          "rainy",
+          "drizzly",
+          "showery",
+          "wet",
+          "damp",
+          "misty",
+          "foggy",
+          "humid",
+          "windy",
+          "breezy",
+          "gusty",
+          "stormy",
+          "thunderous",
+          "lightning",
+          "hazy",
+          "overcast",
+          "cloudy",
+          "gloomy",
+          "grey",
+          "muggy",
+          "smoggy",
+          "sticky",
+          "blustery",
+          "tornadic",
+          "snowy",
+          "hailing",
+        ];
+
+        if (correctAnswers.includes(userAnswer)) {
+          sendWeatherInput(userAnswer);
+          newInterface.classList.add("hidden");
+          finalPage.classList.remove("hidden");
+        } else {
+          alert(
+            "Incorrect answer. Try again! with words like sunny, rainy, cold, hot..."
+          );
         }
-       function sendWeatherInput(weather) {
-  fetch("https://february12-b36l1fq8y-bilsiiis-projects.vercel.app/api/submitWeather", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ weather })  // Note the key 'weather'
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log("Success:", data);
-    // show success message if needed
-  })
-  .catch(error => {
-    console.error("Error:", error);
-    // show error message if needed
-  });
-}
+      }
 
+      // Countdown timer
+      const countdownDate = new Date("April 8, 2025 00:00:00").getTime();
 
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = countdownDate - now;
 
-// Example: call this when user submits the weather answer
-function checkAnswer() {
-  let userAnswer = document.getElementById("weatherInput").value.trim().toLowerCase();
-  let correctAnswers = ["sunny", "clear", "bright", "warm", "hot", "mild", "good", "mid", "bad", "pleasant", "nice", "fair", "dry", "cold", "chilly", "freezing", "frosty", "icy", "cool", "rainy", "drizzly", "showery", "wet", "damp", "misty", "foggy", "humid", "windy", "breezy", "gusty", "stormy", "thunderous", "lightning", "hazy", "overcast", "cloudy", "gloomy", "grey", "muggy", "smoggy", "sticky", "blustery", "tornadic", "snowy", "hailing"];
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor(
+          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+        );
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-  if (correctAnswers.includes(userAnswer)) {
-    sendWeatherInput(userAnswer);  // pass validated input
+        document.getElementById("timer").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
-    newInterface.classList.add('hidden');
-    finalPage.classList.remove('hidden');
-  } else {
-    alert("Incorrect answer. Try again! with words like sunny, rainy, cold, hot...");
-  }
-}
-
-        
-
-        const countdownDate = new Date("April 8, 2025 00:00:00").getTime();
-
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = countdownDate - now;
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById("timer").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-            if (distance < 0) {
-                clearInterval(interval);
-                document.getElementById("timer").innerHTML = "Congrats you made it!";
-            }
+        if (distance < 0) {
+          clearInterval(interval);
+          document.getElementById("timer").innerHTML = "Congrats you made it!";
         }
+      }
 
-        const interval = setInterval(updateCountdown, 1000);
-        updateCountdown();
-});
+      const interval = setInterval(updateCountdown, 1000);
+      updateCountdown();
+    });
     </script>
 </body>
 </html>
