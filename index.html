@@ -370,158 +370,151 @@
     </div>
 
     <script>
-       document.addEventListener("DOMContentLoaded", function () {
-      const backgroundSong = document.getElementById("backgroundSong");
-      const muteButton = document.getElementById("muteButton");
+      document.addEventListener("DOMContentLoaded", function () {
+  const backgroundSong = document.getElementById("backgroundSong");
 
-      // Play song on window load
-      window.onload = () => {
-        backgroundSong.play();
-      };
+  window.onload = () => {
+    backgroundSong.play();
+  };
 
-    ]
+  // Eye buttons and page transitions
+  const eyeButton1 = document.getElementById("eyeButton1");
+  const eyeButton2 = document.getElementById("eyeButton2");
+  const landingPage = document.getElementById("landingPage");
+  const newInterface = document.getElementById("newInterface");
+  const finalPage = document.getElementById("finalPage");
 
-      // Eye buttons and page transitions
-      const eyeButton1 = document.getElementById("eyeButton1");
-      const eyeButton2 = document.getElementById("eyeButton2");
-      const landingPage = document.getElementById("landingPage");
-      const newInterface = document.getElementById("newInterface");
-      const finalPage = document.getElementById("finalPage");
+  let eye1Clicked = false;
+  let eye2Clicked = false;
 
-      let eye1Clicked = false;
-      let eye2Clicked = false;
+  eyeButton1.addEventListener("click", () => {
+    eye1Clicked = true;
+    checkEyesClicked();
+  });
 
-      eyeButton1.addEventListener("click", () => {
-        eye1Clicked = true;
-        checkEyesClicked();
+  eyeButton2.addEventListener("click", () => {
+    eye2Clicked = true;
+    checkEyesClicked();
+  });
+
+  function checkEyesClicked() {
+    if (eye1Clicked && eye2Clicked) {
+      landingPage.classList.add("hidden");
+      newInterface.classList.remove("hidden");
+    }
+  }
+
+  function sendWeatherInput(weather) {
+    fetch(
+      "https://february12-b36l1fq8y-bilsiiis-projects.vercel.app/api/submitWeather",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ weather }),
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Success:", data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
       });
+  }
 
-      eyeButton2.addEventListener("click", () => {
-        eye2Clicked = true;
-        checkEyesClicked();
-      });
+  window.checkAnswer = function () {
+    const userAnswer = document
+      .getElementById("weatherInput")
+      .value.trim()
+      .toLowerCase();
 
-      function checkEyesClicked() {
-        if (eye1Clicked && eye2Clicked) {
-          landingPage.classList.add("hidden");
-          newInterface.classList.remove("hidden");
-        }
-      }
+    const correctAnswers = [
+      "sunny",
+      "clear",
+      "bright",
+      "warm",
+      "hot",
+      "mild",
+      "good",
+      "mid",
+      "bad",
+      "pleasant",
+      "nice",
+      "fair",
+      "dry",
+      "cold",
+      "chilly",
+      "freezing",
+      "frosty",
+      "icy",
+      "cool",
+      "rainy",
+      "drizzly",
+      "showery",
+      "wet",
+      "damp",
+      "misty",
+      "foggy",
+      "humid",
+      "windy",
+      "breezy",
+      "gusty",
+      "stormy",
+      "thunderous",
+      "lightning",
+      "hazy",
+      "overcast",
+      "cloudy",
+      "gloomy",
+      "grey",
+      "muggy",
+      "smoggy",
+      "sticky",
+      "blustery",
+      "tornadic",
+      "snowy",
+      "hailing",
+    ];
 
-      // Submit weather button
-      const submitWeather = document.getElementById("submitWeather");
-      submitWeather.addEventListener("click", checkAnswer);
+    if (correctAnswers.includes(userAnswer)) {
+      sendWeatherInput(userAnswer);
+      newInterface.classList.add("hidden");
+      finalPage.classList.remove("hidden");
+    } else {
+      alert(
+        "Incorrect answer. Try again! with words like sunny, rainy, cold, hot..."
+      );
+    }
+  };
 
-      function sendWeatherInput(weather) {
-        fetch(
-          "https://february12-b36l1fq8y-bilsiiis-projects.vercel.app/api/submitWeather",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ weather }),
-          }
-        )
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("Success:", data);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
-      }
+  // Countdown timer
+  const countdownDate = new Date("April 8, 2025 00:00:00").getTime();
 
-      function checkAnswer() {
-        const userAnswer = document
-          .getElementById("weatherInput")
-          .value.trim()
-          .toLowerCase();
+  function updateCountdown() {
+    const now = new Date().getTime();
+    const distance = countdownDate - now;
 
-        const correctAnswers = [
-          "sunny",
-          "clear",
-          "bright",
-          "warm",
-          "hot",
-          "mild",
-          "good",
-          "mid",
-          "bad",
-          "pleasant",
-          "nice",
-          "fair",
-          "dry",
-          "cold",
-          "chilly",
-          "freezing",
-          "frosty",
-          "icy",
-          "cool",
-          "rainy",
-          "drizzly",
-          "showery",
-          "wet",
-          "damp",
-          "misty",
-          "foggy",
-          "humid",
-          "windy",
-          "breezy",
-          "gusty",
-          "stormy",
-          "thunderous",
-          "lightning",
-          "hazy",
-          "overcast",
-          "cloudy",
-          "gloomy",
-          "grey",
-          "muggy",
-          "smoggy",
-          "sticky",
-          "blustery",
-          "tornadic",
-          "snowy",
-          "hailing",
-        ];
+    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+    );
+    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        if (correctAnswers.includes(userAnswer)) {
-          sendWeatherInput(userAnswer);
-          newInterface.classList.add("hidden");
-          finalPage.classList.remove("hidden");
-        } else {
-          alert(
-            "Incorrect answer. Try again! with words like sunny, rainy, cold, hot..."
-          );
-        }
-      }
+    document.getElementById("timer").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
-      // Countdown timer
-      const countdownDate = new Date("April 8, 2025 00:00:00").getTime();
+    if (distance < 0) {
+      clearInterval(interval);
+      document.getElementById("timer").innerHTML = "Congrats you made it!";
+    }
+  }
 
-      function updateCountdown() {
-        const now = new Date().getTime();
-        const distance = countdownDate - now;
+  const interval = setInterval(updateCountdown, 1000);
+  updateCountdown();
+});
 
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor(
-          (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-        );
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-        document.getElementById("timer").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-        if (distance < 0) {
-          clearInterval(interval);
-          document.getElementById("timer").innerHTML = "Congrats you made it!";
-        }
-      }
-
-      const interval = setInterval(updateCountdown, 1000);
-      updateCountdown();
-    });
     </script>
 </body>
 </html>
