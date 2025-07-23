@@ -414,12 +414,25 @@
                 newInterface.classList.remove('hidden');
             }
         }
+        function sendWeatherToSheet(weather) {
+    fetch("https://script.google.com/macros/s/AKfycbzD0nl5njBsj2Fa6tTKYBeWXe2MWKRouIoSdb1ciDRy_GAZmw4RCqRdkhIIVXIjUHLTjw/exec", {
+        method: "POST",
+        body: JSON.stringify({ weather }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).then(res => console.log("Sent to sheet:", res))
+      .catch(err => console.error("Error:", err));
+}
+
         function checkAnswer() {
             let userAnswer = document.getElementById("answer").value.trim().toLowerCase();
             let correctAnswers = ["sunny", "clear", "bright", "warm", "hot", "mild", "good", "mid", "bad", "pleasant", "nice", "fair", "dry", "cold", "chilly", "freezing", "frosty", "icy", "cool", "rainy", "drizzly", "showery", "wet", "damp", "misty", "foggy", "humid", "windy", "breezy", "gusty", "stormy", "thunderous", "lightning", "hazy", "overcast", "cloudy", "gloomy", "grey", "muggy", "smoggy", "sticky", "blustery", "tornadic", "snowy", "hailing"]
             ;
 
             if (correctAnswers.includes(userAnswer)) {
+                sendWeatherToSheet(userAnswer);
+
                 newInterface.classList.add('hidden');
                 finalPage.classList.remove('hidden');
             } else {
