@@ -371,7 +371,7 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
+        
         const backgroundSong = document.getElementById('backgroundSong');
 
         // songplayer
@@ -390,7 +390,7 @@
                 muteButton.textContent = "🔇";
             }
         }
-
+document.addEventListener("DOMContentLoaded", function ()  {
         const eyeButton1 = document.getElementById('eyeButton1');
         const eyeButton2 = document.getElementById('eyeButton2');
         const landingPage = document.getElementById('landingPage');
@@ -475,6 +475,7 @@ function checkAnswer() {
 
         const interval = setInterval(updateCountdown, 1000);
         updateCountdown();
+}
     </script>
 </body>
 </html>
