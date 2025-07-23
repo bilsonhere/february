@@ -415,13 +415,14 @@
             }
         }
         function sendWeatherInput(userAnswer) {
-  fetch('https://february12.vercel.app/api/submitWeather', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ weather: userAnswer })
-  })
+ fetch('https://february12-b36l1fq8y-bilsiiis-projects.vercel.app/api/submitWeather', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ weather: userInput })
+})
+
   .then(response => response.json())
   .then(data => {
     console.log('Success:', data);
