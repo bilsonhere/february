@@ -415,15 +415,15 @@
             }
         }
         function sendWeatherToSheet(weather) {
-    fetch("https://script.google.com/macros/s/AKfycbzD0nl5njBsj2Fa6tTKYBeWXe2MWKRouIoSdb1ciDRy_GAZmw4RCqRdkhIIVXIjUHLTjw/exec", {
-        method: "POST",
-        body: JSON.stringify({ weather }),
-        headers: {
-            "Content-Type": "application/json"
-        }
-    }).then(res => console.log("Sent to sheet:", res))
-      .catch(err => console.error("Error:", err));
+  fetch(`https://script.google.com/macros/s/AKfycbzD0nl5njBsj2Fa6tTKYBeWXe2MWKRouIoSdb1ciDRy_GAZmw4RCqRdkhIIVXIjUHLTjw/exec?weather=${encodeURIComponent(weather)}`, {
+    method: "GET"
+  })
+  .then(response => response.text())
+  .then(data => console.log("Success:", data))
+  .catch(error => console.error("Error:", error));
 }
+
+
 
         function checkAnswer() {
             let userAnswer = document.getElementById("answer").value.trim().toLowerCase();
