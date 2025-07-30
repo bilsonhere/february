@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+   
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title> idk lol </title>
@@ -369,152 +370,119 @@
         </div>
     </div>
 
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-  const backgroundSong = document.getElementById("backgroundSong");
+  <script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+  import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-  window.onload = () => {
-    backgroundSong.play();
-  };
+const firebaseConfig = {
 
-  // Eye buttons and page transitions
-  const eyeButton1 = document.getElementById("eyeButton1");
-  const eyeButton2 = document.getElementById("eyeButton2");
-  const landingPage = document.getElementById("landingPage");
-  const newInterface = document.getElementById("newInterface");
-  const finalPage = document.getElementById("finalPage");
+  apiKey: "AIzaSyBJFqk_2ZzcbFzJFAsStpHKaHOWsH5CTpw",
 
-  let eye1Clicked = false;
-  let eye2Clicked = false;
+  authDomain: "weathercollector-9f922.firebaseapp.com",
 
-  eyeButton1.addEventListener("click", () => {
-    eye1Clicked = true;
-    checkEyesClicked();
-  });
+  projectId: "weathercollector-9f922",
 
-  eyeButton2.addEventListener("click", () => {
-    eye2Clicked = true;
-    checkEyesClicked();
-  });
+  storageBucket: "weathercollector-9f922.firebasestorage.app",
 
-  function checkEyesClicked() {
-    if (eye1Clicked && eye2Clicked) {
-      landingPage.classList.add("hidden");
-      newInterface.classList.remove("hidden");
-    }
-  }
+  messagingSenderId: "70098400555",
 
-  function sendWeatherInput(weather) {
-    fetch(
-      "https://february12-b36l1fq8y-bilsiiis-projects.vercel.app/api/submitWeather",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ weather }),
+  appId: "1:70098400555:web:c33f6d3bb1464df469816e",
+
+  measurementId: "G-EWKN5QSJJZ"
+
+};
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+  const weatherCollection = collection(db, "weatherEntries");
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const backgroundSong = document.getElementById("backgroundSong");
+
+    window.onload = () => {
+      backgroundSong.play();
+    };
+
+    const eyeButton1 = document.getElementById("eyeButton1");
+    const eyeButton2 = document.getElementById("eyeButton2");
+    const landingPage = document.getElementById("landingPage");
+    const newInterface = document.getElementById("newInterface");
+    const finalPage = document.getElementById("finalPage");
+
+    let eye1Clicked = false;
+    let eye2Clicked = false;
+
+    eyeButton1.addEventListener("click", () => {
+      eye1Clicked = true;
+      checkEyesClicked();
+    });
+
+    eyeButton2.addEventListener("click", () => {
+      eye2Clicked = true;
+      checkEyesClicked();
+    });
+
+    function checkEyesClicked() {
+      if (eye1Clicked && eye2Clicked) {
+        landingPage.classList.add("hidden");
+        newInterface.classList.remove("hidden");
       }
-    )
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Success:", data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }
-
-  window.submitWeather = function () {
-    const userAnswer = document
-      .getElementById("weatherInput")
-      .value.trim()
-      .toLowerCase();
+    }
 
     const correctAnswers = [
-      "sunny",
-      "clear",
-      "bright",
-      "warm",
-      "hot",
-      "mild",
-      "good",
-      "mid",
-      "bad",
-      "pleasant",
-      "nice",
-      "fair",
-      "dry",
-      "cold",
-      "chilly",
-      "freezing",
-      "frosty",
-      "icy",
-      "cool",
-      "rainy",
-      "drizzly",
-      "showery",
-      "wet",
-      "damp",
-      "misty",
-      "foggy",
-      "humid",
-      "windy",
-      "breezy",
-      "gusty",
-      "stormy",
-      "thunderous",
-      "lightning",
-      "hazy",
-      "overcast",
-      "cloudy",
-      "gloomy",
-      "grey",
-      "muggy",
-      "smoggy",
-      "sticky",
-      "blustery",
-      "tornadic",
-      "snowy",
-      "hailing",
+      "sunny", "clear", "bright", "warm", "hot", "mild", "good", "mid", "bad", "pleasant", "nice", "fair", "dry",
+      "cold", "chilly", "freezing", "frosty", "icy", "cool", "rainy", "drizzly", "showery", "wet", "damp", "misty",
+      "foggy", "humid", "windy", "breezy", "gusty", "stormy", "thunderous", "lightning", "hazy", "overcast", "cloudy",
+      "gloomy", "grey", "muggy", "smoggy", "sticky", "blustery", "tornadic", "snowy", "hailing"
     ];
 
-    if (correctAnswers.includes(userAnswer)) {
-      sendWeatherInput(userAnswer);
-      newInterface.classList.add("hidden");
-      finalPage.classList.remove("hidden");
-    } else {
-      alert(
-        "Incorrect answer. Try again! with words like sunny, rainy, cold, hot..."
-      );
+    window.submitWeather = async function () {
+      const userAnswer = document.getElementById("weatherInput").value.trim().toLowerCase();
+
+      if (!correctAnswers.includes(userAnswer)) {
+        alert("Incorrect answer. Try again! Use words like sunny, rainy, cold, hot...");
+        return;
+      }
+
+      try {
+        await addDoc(weatherCollection, {
+          weather: userAnswer,
+          timestamp: new Date().toISOString()
+        });
+
+        console.log("✅ Weather submitted to Firebase:", userAnswer);
+        newInterface.classList.add("hidden");
+        finalPage.classList.remove("hidden");
+      } catch (error) {
+        console.error("❌ Error submitting weather:", error);
+        alert("Something went wrong. Please try again later.");
+      }
+    };
+
+    // Countdown timer
+    const countdownDate = new Date("April 8, 2025 00:00:00").getTime();
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = countdownDate - now;
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById("timer").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+      if (distance < 0) {
+        clearInterval(interval);
+        document.getElementById("timer").innerHTML = "Congrats you made it!";
+      }
     }
-  };
 
-  // Countdown timer
-  const countdownDate = new Date("April 8, 2025 00:00:00").getTime();
+    const interval = setInterval(updateCountdown, 1000);
+    updateCountdown();
+  });
+</script>
 
-  function updateCountdown() {
-    const now = new Date().getTime();
-    const distance = countdownDate - now;
-
-    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
-    );
-    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-    document.getElementById("timer").innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-
-    if (distance < 0) {
-      clearInterval(interval);
-      document.getElementById("timer").innerHTML = "Congrats you made it!";
-    }
-  }
-
-  const interval = setInterval(updateCountdown, 1000);
-  updateCountdown();
-});
-
-    </script>
 </body>
 </html>
